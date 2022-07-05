@@ -430,7 +430,7 @@ def dynamical_analysis():
                     st.pyplot(fig)
 
 
-with st.sidebar():
+with st.sidebar:
     st.header("Select map")
 
     active_tab = st.radio("Modes", ["Select map", "Trajectory Analysis", "Dynamical Analysis"])
