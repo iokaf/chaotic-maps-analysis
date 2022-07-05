@@ -405,7 +405,7 @@ def dynamical_analysis():
                     st.pyplot(fig)
 
 
-    if st.session_state.get(params_submitted, None):
+    if st.session_state.get("params_submitted", None):
         with st.form("lyapunov exponent"):
             chosen_variable = st.selectbox("Which variable", range(1, 1 + num_equations))
             #fixme This should be a list from multiselection
