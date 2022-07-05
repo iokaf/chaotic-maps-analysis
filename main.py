@@ -189,7 +189,7 @@ def select_map():
         chaotic_map = DCS(iteration)
         st.session_state["chaotic_map"] = chaotic_map
 
-		st.success("Map selected")
+        st.success("Map selected")
 
 
 ###########################################################################################################
