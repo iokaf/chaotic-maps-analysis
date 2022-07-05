@@ -120,21 +120,20 @@ def select_map():
             st.session_state["equations_selected"] = False
             st.experimental_rerun()
 
-		
-		with st.expander("Example equations"):
-			example_cols = st.columns(2)
-			example_cols[0].write("Logistic Map")
-			example_cols[1].write("r * x * (1 -x)")
-			
-			example_cols[0].write("Sine Map")
-			example_cols[0].write("m * sin(pi * x)")
-			
+        with st.expander("Example equations"):
+            example_cols = st.columns(2)
+            example_cols[0].write("Logistic Map")
+            example_cols[1].write("r * x * (1 -x)")
+            
+            example_cols[0].write("Sine Map")
+            example_cols[1].write("m * sin(pi * x)")
+            
 			example_cols[0].write("")
-			example_cols[0].write("")
+			example_cols[1].write("")
 			
 			example_cols[0].write("Arnold Map")
-			example_cols[0].write("mod(2 * x + y, 1)")
-			example_cols[0].write("mod(x + y, 1)")
+			example_cols[1].write("mod(2 * x + y, 1)")
+			example_cols[1].write("mod(x + y, 1)")
 			
 
     if st.session_state.get("equations_selected"):
