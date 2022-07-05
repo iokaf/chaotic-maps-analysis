@@ -22,7 +22,7 @@ def select_map():
         num_parameters = st.number_input("Number of parameters", min_value = 1, step = 1, value=st.session_state.get('num_parameters'))
 
         select_map = st.form_submit_button("Select map")
-        
+
     if select_map:
         st.session_state["equations_selected"] = False
         st.session_state["select_map"] = True
@@ -50,7 +50,7 @@ def select_map():
             var_name_cols = st.columns(num_eqs)
             for n, col in enumerate(var_name_cols):
                 var_names[n] = col.text_input(f"Variable {n + 1} name", max_chars=1)
-            
+
             par_names = num_pars * [""]
             par_name_cols = st.columns(num_pars)
             for n, col in enumerate(par_name_cols):
@@ -59,7 +59,7 @@ def select_map():
             names_button_cols = st.columns(2)
             select_names = names_button_cols[0].form_submit_button("Select names")
             cancel = names_button_cols[1].form_submit_button("Cancel")
-    
+
         if select_names:
             st.session_state["names_selected"] = True
             if "" in var_names:
@@ -105,7 +105,7 @@ def select_map():
             eqn_button_cols = st.columns(2)
             select_equations = eqn_button_cols[0].form_submit_button("Select equations")
             cancel = eqn_button_cols[1].form_submit_button("Cancel")
-            
+
         if select_equations:
             if "" in equations:
                 st.error("State equation is not given")
@@ -124,17 +124,17 @@ def select_map():
             example_cols = st.columns(2)
             example_cols[0].write("Logistic Map")
             example_cols[1].write("r * x * (1 -x)")
-            
+
             example_cols[0].write("Sine Map")
             example_cols[1].write("m * sin(pi * x)")
-            
-			example_cols[0].write("")
-			example_cols[1].write("")
-			
-			example_cols[0].write("Arnold Map")
-			example_cols[1].write("mod(2 * x + y, 1)")
-			example_cols[1].write("mod(x + y, 1)")
-			
+
+            example_cols[0].write("")
+            example_cols[1].write("")
+
+            example_cols[0].write("Arnold Map")
+            example_cols[1].write("mod(2 * x + y, 1)")
+            example_cols[1].write("mod(x + y, 1)")
+
 
     if st.session_state.get("equations_selected"):
 
@@ -154,7 +154,7 @@ def select_map():
                 file.write(tab + f'{",".join(var_names)} = xx\n')
             else:
                 file.write(tab + f"{var_names[0]}, = xx\n")
-            
+
             if len(par_names) > 1:
                 file.write(tab + f'{",".join(par_names)} = rr\n')
             else:
@@ -168,8 +168,8 @@ def select_map():
                 file.write(tab + f'return {",".join(var_names)}')
             else:
                 file.write(tab + f'return {var_names[0]},')
-            
-            
+
+
 
 
         path = Path(file_name)
@@ -184,11 +184,11 @@ def select_map():
         st.session_state["iteration"] = iteration
         os.remove(file_name)
 
-        
+
         iteration = st.session_state["iteration"]
         chaotic_map = DCS(iteration)
         st.session_state["chaotic_map"] = chaotic_map
-		
+
 		st.success("Map selected")
 
 
@@ -200,7 +200,7 @@ def select_map():
 def trajectories():
     if st.session_state.get("chaotic_map") is None:
         st.error("Please select a map first")
-        return 
+        return
     chaotic_map = st.session_state["chaotic_map"]
 
     with st.form("Trajectory Initial Conditions"):
@@ -223,7 +223,7 @@ def trajectories():
         if not parameters_string:
             st.error("Please enter parameter values")
             return
-        
+
 
         num_equations = st.session_state["num_equations"]
         st.session_state["trajectory_params_submitted"] = True
@@ -235,7 +235,7 @@ def trajectories():
         params_list = list(map(lambda x: x.strip(), params_list))
         params = tuple([float(x) for x in params_list if x])
         st.session_state["trajectory_initial_condition"] = init_cond
-        st.session_state["trajectory_parameters"] = params   
+        st.session_state["trajectory_parameters"] = params
 
     if st.session_state["trajectory_params_submitted"]:
         with st.form("bifurcation diagram"):
@@ -245,12 +245,12 @@ def trajectories():
 
             show_timeseries = st.checkbox("Show timeseries")
             traj_button = st.form_submit_button("Selected Variable")
-            
+
         if traj_button:
             st.session_state["show_trajectory"] = True
             st.session_state["show_timeseries"] = show_timeseries
 
-    
+
         if st.session_state.get("show_trajectory"):
 
             chaotic_map = st.session_state["chaotic_map"]
@@ -284,7 +284,7 @@ def trajectories():
                     plt.tight_layout()
                     st.session_state["trajectory_diagrams"][chosen_variable] = fig
                     st.pyplot(fig)
-            
+
                 if st.session_state["show_timeseries"]:
                     st.write(", ".join(list(map(str, points))))
 
@@ -302,7 +302,7 @@ def dynamical_analysis():
         which_parameter = st.selectbox("Which parameter", tuple(range(1, 1 + num_parameters)))
         which_parameter = int(which_parameter)
         param_select = st.form_submit_button("Select Parameter")
-    
+
     if param_select:
         st.session_state["parameter_selected"] = True
         if initial_conditions_string:
@@ -313,7 +313,7 @@ def dynamical_analysis():
         else:
             st.error("Please enter initial conditions")
             return
-        
+
         st.session_state["which_parameter"] = which_parameter
         st.session_state["parameters"] = ()
 
@@ -333,7 +333,7 @@ def dynamical_analysis():
                     parameter_end = pam_cols[1].number_input(f"Parameter {i} range end", value = 2.0, min_value = 1e-15, max_value = 1e06, format = "%.5f")
                     parameter_step = pam_cols[2].number_input(f"Parameter {i} step", value = 1e-01, min_value = 1e-15, max_value = 1e03, format = "%.10f")
                     parameters[i-1] = np.arange(parameter_start, parameter_end, parameter_step)
-            
+
             params = [parameters.get(i) for i in range(num_parameters)]
             params = tuple(params)
             submit_param = st.form_submit_button("Select")
@@ -342,9 +342,9 @@ def dynamical_analysis():
 
                 st.session_state["parameters_chosen"] = True
                 st.session_state["parameters"] = params
-                    
+
                 st.success("Parameters Chosen Successfully")
-                
+
                 base_figure_dict = dict(zip(range(num_equations), num_equations * [None]))
                 st.session_state["bifurcation_diagrams"] = base_figure_dict.copy()
                 st.session_state["lyapunov_exponent"] = base_figure_dict.copy()
@@ -448,7 +448,3 @@ elif active_tab == "Trajectory Analysis":
     trajectories()
 elif active_tab == "Dynamical Analysis":
     dynamical_analysis()
-
-
-
-
