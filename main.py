@@ -131,9 +131,9 @@ def select_map():
             example_cols[0].write("")
             example_cols[1].write("")
 
-            example_cols[0].write("Arnold Map")
-            example_cols[1].write("mod(2 * x + y, 1)")
-            example_cols[1].write("mod(x + y, 1)")
+            example_cols[0].write("Cat Map")
+            example_cols[1].write("mod(x + a * y, 1)")
+            example_cols[1].write("mod(b * x + (1 + a*b) * y, 1)")
 
 
     if st.session_state.get("equations_selected"):
@@ -448,3 +448,7 @@ elif active_tab == "Trajectory Analysis":
     trajectories()
 elif active_tab == "Dynamical Analysis":
     dynamical_analysis()
+
+if st.button("Reset"):
+    st.session_state = {}
+    active_tab = "Select map"
