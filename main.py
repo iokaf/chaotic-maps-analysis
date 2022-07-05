@@ -128,14 +128,6 @@ def select_map():
             example_cols[0].write("Sine Map")
             example_cols[1].write("m * sin(pi * x)")
 
-            example_cols[0].write("")
-            example_cols[1].write("")
-
-            example_cols[0].write("Cat Map")
-            example_cols[1].write("mod(x + a * y, 1)")
-            example_cols[1].write("mod(b * x + (1 + a*b) * y, 1)")
-
-
     if st.session_state.get("equations_selected"):
 
         curr_dir = os.getcwd()
@@ -258,9 +250,11 @@ def trajectories():
             params = st.session_state["trajectory_parameters"]
 
             if st.session_state.get("single_le") is None:
-                st.session_state["single_le"] = chaotic_map.lyapunov_exponents_approximate_qr(init_cond, params)
-
-            st.write(f"Lyapunov Exponent {st.session_state.get('single_le')[chosen_variable-1]}")
+                try:
+                    st.session_state["single_le"] = chaotic_map.lyapunov_exponents_approximate_qr(init_cond, params)
+                    st.write(f"Lyapunov Exponent {st.session_state.get('single_le')[chosen_variable-1]}")
+                except:
+                    st.error("Lyapunov exponent could not be computed.")
 
             if st.session_state["trajectory_diagrams"].get(chosen_variable) is not None and not st.session_state["show_timeseries"]:
                 print("I am here")
@@ -411,14 +405,14 @@ def dynamical_analysis():
                     st.pyplot(fig)
 
 
-    if st.session_state.params_submitted:
+    if st.session_state.get(params_submitted, None):
         with st.form("lyapunov exponent"):
             chosen_variable = st.selectbox("Which variable", range(1, 1 + num_equations))
             #fixme This should be a list from multiselection
             le_button = st.form_submit_button("Select Variable")
 
         if le_button:
-            if st.session_state["lyapunov_exponent"].get(chosen_variable) is not None:
+            if st.session_state.get("lyapunov_exponent", {}).get(chosen_variable) is not None:
                 st.pyplot(st.session_state["lyapunov_exponent"][chosen_variable])
             else:
                 chaotic_map = st.session_state["chaotic_map"]
@@ -436,11 +430,15 @@ def dynamical_analysis():
                     st.pyplot(fig)
 
 
-st.header("Select map")
+with st.sidebar():
+    st.header("Select map")
 
-active_tab = st.radio("Options", ["Select map", "Trajectory Analysis", "Dynamical Analysis"])
+    active_tab = st.radio("Modes", ["Select map", "Trajectory Analysis", "Dynamical Analysis"])
 
-
+    if st.button("Reset"):
+        st.session_state = {}
+        active_tab = "Select map"
+        st.experimental_rerun()
 
 if active_tab == "Select map":
     select_map()
@@ -448,7 +446,3 @@ elif active_tab == "Trajectory Analysis":
     trajectories()
 elif active_tab == "Dynamical Analysis":
     dynamical_analysis()
-
-if st.button("Reset"):
-    st.session_state = {}
-    active_tab = "Select map"
