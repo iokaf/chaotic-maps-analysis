@@ -132,9 +132,6 @@ def select_map():
             par_names = st.session_state["parameter_names"]
 
 
-            st.write(os.path.exists(file_name))
-            st.write(file_name)
-
             file.write("from numpy import *\n")
             file.write("def iteration(xx, rr): \n")
             if len(var_names) > 1:
@@ -169,8 +166,7 @@ def select_map():
         iteration = foo.iteration
 
         st.session_state["iteration"] = iteration
-        st.write(iteration)
-        #os.remove(file_name)
+        os.remove(file_name)
 
         
         iteration = st.session_state["iteration"]
@@ -213,7 +209,6 @@ def trajectories():
         
 
         num_equations = st.session_state["num_equations"]
-        st.write(f"THis is the number of equations {num_equations}")
         st.session_state["trajectory_params_submitted"] = True
         init_list = initial_conditions_string.split(",")
         init_list = list(map(lambda x: x.strip(), init_list))
@@ -236,7 +231,6 @@ def trajectories():
             
         if traj_button:
             st.session_state["show_trajectory"] = True
-            st.write(show_timeseries)
             st.session_state["show_timeseries"] = show_timeseries
 
     
@@ -429,7 +423,7 @@ st.header("Select map")
 
 active_tab = st.radio("Options", ["Select map", "Trajectory Analysis", "Dynamical Analysis"])
 
-st.write(active_tab)
+
 
 if active_tab == "Select map":
     select_map()
