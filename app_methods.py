@@ -328,27 +328,29 @@ def trajectories():
                 except:
                     st.error("Trajectory could not be computed. Is the map not bounded?")
                     return
+
                 plotter = st.session_state["plotter"]
                 for var in [chosen_variable]:
-                    st.markdown(f"Trajectory of variable {var}")
                     fig = plt.figure()
                     # points = [point[var-1] for point in d]
                     # n = len(points)
                     # plt.plot(range(n), points)
                     
                     try:
-                        fig = plotter.plot_trajectory(init_cond, params, int(num_points+1), int(var)-1)
+                        fig = plotter.plot_trajectory(init_cond, params, int(num_points+1), int(var)-1)    
+                        plt.autoscale(enable=True, axis='x', tight=True)
+                        plt.tight_layout()
+                        st.session_state["trajectory_diagrams"][chosen_variable] = fig
+                        st.markdown(f"##### Trajectory diagram of variable {st.session_state['variable_names'][chosen_variable-1]}: ")
+                        st.pyplot(fig)
                     except:
                         st.error("Trajectory could not be computed. Is the map not bounded?")
                         return
-                    plt.autoscale(enable=True, axis='x', tight=True)
-                    plt.tight_layout()
-                    st.session_state["trajectory_diagrams"][chosen_variable] = fig
-                    st.markdown(f"##### Bifurcation diagram of variable {st.session_state['variable_names'][chosen_variable-1]}: ")
-                    st.pyplot(fig)
 
-                if st.session_state["show_timeseries"]:
-                    st.write(", ".join(list(map(str, points))))
+                    if st.session_state["show_timeseries"]:
+                        points = chaotic_map.trajectory(init_cond, params, int(num_points+1))
+                        st.write(", ".join(list(map(str, points))))
+                
 
 
             cobweb_fig = plt.figure()
