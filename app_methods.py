@@ -355,7 +355,11 @@ def trajectories():
 
             cobweb_fig = plt.figure()
             for var in [chosen_variable]:
-                cobweb_fig = plotter.cobweb_diagram(init_cond, params, int(num_points+1), int(var)-1)
+                try:
+                    cobweb_fig = plotter.cobweb_diagram(init_cond, params, int(num_points+1), int(var)-1)
+                except:
+                        st.error("Trajectory could not be computed. Is the map not bounded?")
+                        return
                 plt.autoscale(enable=True, axis='x', tight=True)
                 plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
                 plt.xlabel("t")
@@ -368,7 +372,11 @@ def trajectories():
             st.markdown(f"##### Return map diagram of variable {st.session_state['variable_names'][chosen_variable-1]}: ")
             return_map_fig = plt.figure()
             for var in [chosen_variable]:
-                return_map_fig = plotter.return_map(init_cond, params, max(500, int(num_points+1)), int(var)-1)
+                try:
+                    return_map_fig = plotter.return_map(init_cond, params, max(500, int(num_points+1)), int(var)-1)
+                except:
+                        st.error("Trajectory could not be computed. Is the map not bounded?")
+                        return
                 plt.autoscale(enable=True, axis='x', tight=True)
                 plt.ylabel(st.session_state.get('variable_names')[var-1] + r"$_{k+1}$", rotation=0)
                 plt.xlabel(st.session_state.get('variable_names')[var-1] + r"$_{k}$")
