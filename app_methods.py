@@ -18,7 +18,9 @@ def select_map():
             st.session_state['num_equations'] = 1
         if not st.session_state.get('num_parameters'):
             st.session_state['num_parameters'] = 1
-        num_equations = st.number_input("System Dimension", min_value = 1, step = 1, value=st.session_state.get('num_equations'))
+
+        st.markdown("##### Select number of equations (dimension) and number of parameters.")
+        num_equations = st.number_input("Map Dimension", min_value = 1, step = 1, value=st.session_state.get('num_equations'))
         num_parameters = st.number_input("Number of parameters", min_value = 1, step = 1, value=st.session_state.get('num_parameters'))
 
         select_map = st.form_submit_button("Select map")
@@ -47,6 +49,8 @@ def select_map():
         st.session_state["trajectory_params_submitted"] = False
 
     if st.session_state.get("select_map"):
+        st.markdown("##### Select the names (symbols) for the variables and parameters.")
+
         num_eqs = st.session_state['num_equations']
         num_pars = st.session_state['num_parameters']
         with st.form("Variable and parameter names"):
@@ -110,7 +114,10 @@ def select_map():
             st.experimental_rerun()
 
     if st.session_state.get("names_selected"):
+        
         with st.form("Insert Equations"):
+            st.markdown("##### Insert the map's equations.")
+
             variable_names = st.session_state["variable_names"]
             num_eqs = len(variable_names)
             equations = num_eqs * [""]
@@ -201,7 +208,7 @@ def select_map():
         st.session_state["chaotic_map"] = chaotic_map
         st.session_state["plotter"] = plotter
         st.success("Map selected")
-        st.markdown("An analysis option from the sidebar can now be selected.")
+        st.markdown("##### An analysis option from the sidebar can now be selected.")
 
 
 ###########################################################################################################
@@ -287,13 +294,16 @@ def trajectories():
     if st.session_state["trajectory_params_submitted"]:
         with st.form("bifurcation diagram"):
             num_equations = st.session_state["num_equations"]
-            chosen_variable = st.selectbox("Select variable", range(1, 1 + num_equations))
+
+            chosen_variable = st.selectbox("Select variable", st.session_state.get("variable_names"))
             #fixme This should be a list from multiselection
 
             show_timeseries = st.checkbox("Show timeseries")
             traj_button = st.form_submit_button("Selected Variable")
 
         if traj_button:
+            chosen_variable = st.session_state.get("variable_names").index(chosen_variable) + 1
+
             st.session_state["show_trajectory"] = True
             st.session_state["show_timeseries"] = show_timeseries
 
@@ -492,35 +502,38 @@ def dynamical_analysis():
 
                 try:
                     d = plotter.bifurcation_dict(init_cond, params, num_points=300)
+                
+
+                    for var in [chosen_variable]:
+                        st.markdown(f"Bifurcation diagram {var}")
+                        fig = plt.figure()
+                        x_points = []
+                        y_points = []
+                        for pam, bif_points in d.items():
+                            points = [point[var-1] for point in bif_points]
+                            n = len(points)
+                            x_points.extend(n * [pam])
+                            y_points.extend(points)
+                        plt.scatter(x_points, y_points, c='k', s=0.1)
+                        plt.ylim(min(y_points) - 0.05 * abs(max(y_points)), max(y_points) + 0.05 * abs(max(y_points)))
+                        plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
+                        plt.xlabel(st.session_state.get('parameter_names')[which_parameter-1])
+                        plt.tight_layout()
+                        plt.autoscale(enable=True, axis='x', tight=True)
+                        st.session_state["bifurcation_diagrams"][chosen_variable] = fig
+                        st.pyplot(fig)
                 except:
                     st.error("Trajectory could not be computed. Is the map not bounded?")
                     return
 
-                for var in [chosen_variable]:
-                    st.markdown(f"Bifurcation diagram {var}")
-                    fig = plt.figure()
-                    x_points = []
-                    y_points = []
-                    for pam, bif_points in d.items():
-                        points = [point[var-1] for point in bif_points]
-                        n = len(points)
-                        x_points.extend(n * [pam])
-                        y_points.extend(points)
-                    plt.scatter(x_points, y_points, c='k', s=0.1)
-                    plt.ylim(min(y_points) - 0.05 * abs(max(y_points)), max(y_points) + 0.05 * abs(max(y_points)))
-                    plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
-                    plt.xlabel(st.session_state.get('parameter_names')[which_parameter-1])
-                    plt.tight_layout()
-                    plt.autoscale(enable=True, axis='x', tight=True)
-                    st.session_state["bifurcation_diagrams"][chosen_variable] = fig
-                    st.pyplot(fig)
-
         with st.form("Lyapunov Exponent Diagram"):
             st.write("## Create Lyapunov Exponent Diagram")
-            le_chosen_variable = st.selectbox("Select variable", range(1, 1 + num_equations))
+            le_chosen_variable = st.selectbox("Select variable", st.session_state.get("variable_names"))
+            
             le_button = st.form_submit_button("Selected Variable")
 
         if le_button:
+            le_chosen_variable = st.session_state.get("variable_names").index(le_chosen_variable) + 1
             if st.session_state["lyapunov_exponent"].get(le_chosen_variable) is not None:
                 st.pyplot(st.session_state["lyapunov_exponent"][le_chosen_variable])
             else:
@@ -555,8 +568,8 @@ def dynamical_analysis():
     if st.session_state.get("params_submitted", None):
         with st.form("lyapunov exponent"):
             st.write('## Create Lyapunov Exponents Diagram')
-            chosen_variable = st.selectbox("Select variable", range(1, 1 + num_equations))
-            #fixme This should be a list from multiselection
+            chosen_variable = st.selectbox("Select variable", st.session_state.get("variable_names"))
+            chosen_variable = st.session_state.get("variable_names").index(chosen_variable) + 1
             le_button = st.form_submit_button("Select Variable")
 
         if le_button:
@@ -581,3 +594,20 @@ def dynamical_analysis():
 
                     st.session_state["lyapunov_exponent"][chosen_variable] = fig
                     st.pyplot(fig)
+
+
+####################################################################################
+def about():
+    st.markdown("## About")
+    
+    st.markdown("This is a web application for visualizing the discrete chaotic maps. ")
+    st.markdown("It enables the study of both one-dimensional and multi-dimensional maps.")
+    st.markdown("Currently, it allows the visualization of the map trajectory, computation of the Lyapunov exponent, the Cobweb diagram and return map diagram.")
+    st.markdown("Additionaly, it allows the computation of the bifurcation diagram and Lyapunov exponent diagrams for varying map parameters.")
+    st.markdown("The approximation of the Lyapunov exponent is done using the method of [He et al.](https://doi.org/10.1142/S0218127416502199)")
+    st.markdown("Also, the analysis of the chaotic maps is done using the [chaos-maps](https://pypi.org/project/chaos-maps/) package.")
+    st.markdown("Created by: Dr. Ioannis Kafetzis.")
+
+    st.markdown("Cite this work:")
+    st.markdown("Kafetzis I., Moysis L., Volos C. (2021) An online testbed for analyzing chaotic maps. To be presented in 2022 Conference in Nonlinear Science and Complexity.")
+    
