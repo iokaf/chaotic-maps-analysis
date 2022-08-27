@@ -332,7 +332,7 @@ def trajectories():
                 init_cond = st.session_state["trajectory_initial_condition"]
                 params = st.session_state["trajectory_parameters"]
                 fig = plt.figure()
-               
+
                 try:
                     d = chaotic_map.trajectory(init_cond, params, int(num_points+1))
                 except:
@@ -515,7 +515,7 @@ def dynamical_analysis():
                             x_points.extend(n * [pam])
                             y_points.extend(points)
                         plt.scatter(x_points, y_points, c='k', s=0.1)
-                        plt.ylim(min(y_points) - 0.05 * abs(max(y_points)), max(y_points) + 0.05 * abs(max(y_points)))
+                        # plt.ylim(min(y_points) - 0.05 * abs(max(y_points)), max(y_points) + 0.05 * abs(max(y_points)))
                         plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
                         plt.xlabel(st.session_state.get('parameter_names')[which_parameter-1])
                         plt.tight_layout()
@@ -553,10 +553,11 @@ def dynamical_analysis():
                     st.markdown(f"Lyapunov Exponent Diagram {var}")
                     fig = plt.figure()
                     le_vals = [v[le_chosen_variable - 1] for v in d.values()]
+                    st.write(le_vals)
                     plt.plot(d.keys(), le_vals)
                     plt.autoscale(enable=True, axis='x', tight=True)
                     plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
-                    plt.ylim(-1, np.ceil(max(le_vals) + 0.05 * abs(max(le_vals))))
+                    # plt.ylim(-1, np.ceil(max(le_vals) + 0.05 * abs(max(le_vals))))
                     plt.axhline(y=0, c='g', linestyle='--')
                     plt.xlabel(st.session_state.get('parameter_names')[which_parameter-1])
                     plt.tight_layout()
