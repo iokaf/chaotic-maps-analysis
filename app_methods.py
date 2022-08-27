@@ -463,9 +463,9 @@ def dynamical_analysis():
                     parameters[i-1] = st.number_input(f"Value for parameter {st.session_state['parameter_names'][i-1]}", format = "%.5f")
                 elif i == which_parameter:
                     pam_cols = st.columns(3)
-                    parameter_start = pam_cols[0].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} range start", value = 1.0, min_value = 1e-16, max_value = 1e6, format = "%.5f")
-                    parameter_end = pam_cols[1].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} range end", value = 2.0, min_value = 1e-15, max_value = 1e06, format = "%.5f")
-                    parameter_step = pam_cols[2].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} step", value = 1e-01, min_value = 1e-15, max_value = 1e03, format = "%.10f")
+                    parameter_start = pam_cols[0].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} range start", value = 1.0, max_value = 1e6, format = "%.5f")
+                    parameter_end = pam_cols[1].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} range end", value = 2.0, max_value = 1e06, format = "%.5f")
+                    parameter_step = pam_cols[2].number_input(f"Parameter {st.session_state['parameter_names'][i-1]} step", value = 1e-01, max_value = 1e03, format = "%.10f")
                     parameters[i-1] = np.arange(parameter_start, parameter_end, parameter_step)
 
             params = [parameters.get(i) for i in range(num_parameters)]
