@@ -553,7 +553,6 @@ def dynamical_analysis():
                     st.markdown(f"Lyapunov Exponent Diagram {var}")
                     fig = plt.figure()
                     le_vals = [v[le_chosen_variable - 1] for v in d.values()]
-                    st.write(le_vals)
                     plt.plot(d.keys(), le_vals)
                     plt.autoscale(enable=True, axis='x', tight=True)
                     plt.ylabel(st.session_state.get('variable_names')[var-1], rotation=0)
