@@ -511,6 +511,12 @@ def dynamical_analysis():
                         y_points = []
                         for pam, bif_points in d.items():
                             points = [point[var-1] for point in bif_points]
+                            
+                            # ! skip very large values
+                            if max(points) > 1e6 or min(points) < -1e6:
+                                continue
+
+
                             n = len(points)
                             x_points.extend(n * [pam])
                             y_points.extend(points)
