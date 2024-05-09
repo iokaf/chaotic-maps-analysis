@@ -604,7 +604,8 @@ def dynamical_analysis():
 
 ####################################################################################
 def about():
-    st.markdown("## About")
+    st.markdown("# CHAOS")
+    st.markdown("## **CH**aotic **A**nalysis **O**nline **S**imulator")
     
     st.markdown("This is a web application for visualizing the discrete chaotic maps. ")
     st.markdown("It enables the study of both one-dimensional and multi-dimensional maps.")
@@ -613,7 +614,82 @@ def about():
     st.markdown("The approximation of the Lyapunov exponent is done using the method of [He et al.](https://doi.org/10.1142/S0218127416502199)")
     st.markdown("Also, the analysis of the chaotic maps is done using the [chaos-maps](https://pypi.org/project/chaos-maps/) package.")
     st.markdown("Created by: Dr. Ioannis Kafetzis.")
+    st.markdown("Contact: ioanniskaf@gmail.com")
 
-    st.markdown("Cite this work:")
-    st.markdown("Kafetzis I., Moysis L., Volos C. (2021) An online testbed for analyzing chaotic maps. To be presented in 2022 Conference in Nonlinear Science and Complexity.")
+
+    st.markdown("# How to use:")
+    st.markdown("1. Select the map from the sidebar.")
+    st.markdown("2. Insert the equations of the map.")
+    st.markdown("3. Insert the variable and parameter names.")
+    st.markdown("4. Insert the equations in the same order as the variables.")
+    st.markdown("5. Navigate to the Trajectory Analysis or Dynamical Analysis tab.")
+    st.markdown("6. Insert the initial conditions and parameters.")
+    st.markdown("7. Select the variable to be studied.")
+    st.markdown("8. For dynamical analysis select the parameter values.")
+    st.markdown("9. Press the submit button.")
+    st.markdown("10. The results will be displayed in the main panel.")
+    st.markdown("11. The results can be saved as images.")
+
+
+    st.markdown("# Example maps")
+    st.markdown("## 1. Logistic Map")
+    with st.expander("Logistic Map"):
+        st.markdown("### Equation:")
+        st.latex(r"x_{n+1} = r \cdot x_n \cdot (1 - x_n)")
+        st.markdown("### How to enter")
+        st.markdown("1. Number of equations: 1")
+        st.markdown("2. Number of parameters: 1")
+        st.markdown("3. Variable names: x")
+        st.markdown("4. Parameter names: r")
+        st.markdown("5. Equation: r * x * (1 - x)")
+        st.markdown("Parameter range: 0 < r < 4")
+
+
+    st.markdown("## 2. Sine Map")
+    with st.expander("Sine Map"):
+        st.markdown("### Equation:")
+        st.latex(r"x_{n+1} = m \cdot sin(\pi \cdot x_n)")
+        st.markdown("### How to enter")
+        st.markdown("1. Number of equations: 1")
+        st.markdown("2. Number of parameters: 1")
+        st.markdown("3. Variable names: x")
+        st.markdown("4. Parameter names: m")
+        st.markdown("5. Equation: m * sin(pi * x)")
+        st.markdown("Parameter range: 0 < m < inf")
+
+    st.markdown("## 3. Henon Map")
+    with st.expander("Henon Map"):
+        st.markdown("### Equation:")
+        st.latex(r"x_{n+1} = 1 - a \cdot x_n^2 + y_n")
+        st.latex(r"y_{n+1} = b \cdot x_n")
+        st.markdown("### How to enter")
+        st.markdown("1. Number of equations: 2")
+        st.markdown("2. Number of parameters: 2")
+        st.markdown("3. Variable names: x, y")
+        st.markdown("4. Parameter names: a, b")
+        st.markdown("5. Equation: 1 - a * x**2 + y")
+        st.markdown("6. Equation: b * x")
+        st.markdown("Parameter range: 0 < a < 1, 0 < b < 1")
     
+    st.markdown("## 4. Sine-Sine Map")
+    with st.expander("Sine-Sine Map"):
+        st.markdown("### Equation:")
+        st.latex(r"x_{n+1} = sin (m \cdot sin(\pi \cdot x_n))")
+        st.markdown("### How to enter")
+        st.markdown("1. Number of equations: 1")
+        st.markdown("2. Number of parameters: 1")
+        st.markdown("3. Variable names: x")
+        st.markdown("4. Parameter names: m")
+        st.markdown("5. Equation: sin(m * sin(pi * x))")
+        st.markdown("Parameter range: 0 < m < inf")
+
+
+
+
+    st.markdown("# Acknowledgements")
+    st.markdown("Cite this work:")
+    st.markdown("Kafetzis I., Moysis L., Volos C. (2021) An online testbed for analyzing chaotic maps. 2022 Conference in Nonlinear Science and Complexity. Thessaloniki, Greece")
+    
+
+
+
